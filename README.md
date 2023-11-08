@@ -3,7 +3,7 @@ Youtube clone built using NodeJS, Express, Mongo and ES6 (javaScript)
 
 skills : NODE.JS (14.15.1 이상) / MONGO DB / HTML / CSS  
 tools : VSCODE / GITHUB / CHROME
-domain : User / Videos
+domain : User / Videos <br/>
 functions :  
 - User : 계정 생성, 로그인, 프로필 수정, 계정 삭제, 비밀번호 변경
 - Videos : 비디오 보기, 비디오 업로드, 비디오 수정, 비디오 삭제, 댓글 추가, 댓글 수정, 댓글 삭제, 검색

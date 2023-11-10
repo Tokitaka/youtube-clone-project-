@@ -1,7 +1,7 @@
 # youtube-clone-project-
 Youtube clone built using NodeJS, Express, Mongo and ES6 (javaScript)
 
-skills : NODE.JS (14.15.1 이상) / MONGO DB / HTML / CSS  
+skills : NODE.JS (14.15.1 이상) / MONGO DB / HTML / CSS / Express
 tools : VSCODE / GITHUB / CHROME
 
 domain : User / Videos
@@ -35,7 +35,7 @@ functions :
   }
 ```
 
-## code convention
+## API
 ### router
 
 ```jsx
@@ -46,13 +46,16 @@ functions :
 /search -> Search
 
 **users
-/users/edit
-/users/delete
+/users/:id -> Profile 
+/users/logout -> Log Out
+/users/edit -> Edit my Profile ??
+/users/delete -> Delete my Profile ??
 
 **viedos
-/videos/watch
-/videos/edit
-/videos/delete
+/videos/upload -> Upload Video
+/videos/:id -> Watch Video
+/videos/:id/edit -> Edit Video
+/videos/:id/delete -> Delete Video
 /videos/comments
 /videos/comments/delete
 ```

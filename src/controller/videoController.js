@@ -19,7 +19,8 @@ export const getUpload = (req, res) => {
 
 export const postUpload = async (req, res) => { 
     const { title, description, hashtags } = req.body;
-    Video.create({
+    try{
+    await Video.create({
 		title, //title:title
 		description, //description:description
 		hashtags: hashtags.split(",").map(word => `#${word}`), //hashtags:hashtags
@@ -31,6 +32,10 @@ export const postUpload = async (req, res) => {
     }
 );
     return res.redirect("/");
+} catch{
+    return res.render("upload", {pageTitle: "Upload Video"});
+}
+
 };
 
 export const deleteVideo = (req, res) => { 

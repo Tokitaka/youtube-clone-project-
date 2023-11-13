@@ -2,7 +2,7 @@
   "name": "youtube_clone",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/main.js"
+    "dev": "nodemon --exec babel-node src/init.js"
   },
   "license": "MIT",
   "dependencies": {

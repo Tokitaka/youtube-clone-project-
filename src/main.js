@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from 'morgan'
-import "./db";
 
 import globalRouter from "./router/globalRouter";
 import userRouter from "./router/userRouter";
@@ -19,8 +18,6 @@ app.use('/',globalRouter)
 app.use('/videos',videoRouter)
 app.use('/users',userRouter)
 
-const PORT = 4000; 
-const handleListening = ()=> {console.log(`Server listening on port http://localhost:${PORT}`)};
 
-app.listen(PORT, handleListening)
+export default app;
 

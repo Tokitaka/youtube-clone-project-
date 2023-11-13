@@ -1,10 +1,42 @@
 import Video from '../models/Video';
 
-export const see = (req, res)=>{ 
-    return res.send(`Watching Videos #${req.params.id}`)
+export const watch = async (req, res)=>{ 
+    const {id} = req.params;
+    const video = await Video.findById(id);
+    if (!video) {
+        return res.render("404",{pageTitle: "Video Not Found"});
+    }
+    return res.render("watch", {pageTitle: `${video.title}`, video}); 
 };
-export const edit = (req, res)=>{ 
-    return res.send("Editing Videos")};
+
+export const getEdit = async (req, res)=>{ 
+    const {id} = req.params;
+    const video = await Video.findById(id);
+    if(!video){
+        return res.render("404",{pageTitle: "Video Not Found"});
+    } 
+    return res.render("edit", {pageTitle: `Editing ${video.title}`, video});
+};
+
+export const postEdit = async (req, res)=>{ 
+    const {id} = req.params;
+    const {title, description, hashtags} = req.body;
+
+    const video = await Video.exist({_id:id});
+    if(!video) {
+        return res.render("404",{pageTitle: "Video Not Found"});
+    }
+
+    await Video.findByIdAndUpdate(id, {
+            title,
+            description,
+            hashtags: hashtags
+            .split(",")
+            .map(word => word.startsWith("#") ? word : `#${word}`),
+        }
+    );
+        return res.redirect("/");
+};
 
 export const home = async (req, res) => { 
     const videos = await Video.find({});
@@ -23,19 +55,19 @@ export const postUpload = async (req, res) => {
     await Video.create({
 		title, //title:title
 		description, //description:description
-		hashtags: hashtags.split(",").map(word => `#${word}`), //hashtags:hashtags
-		createdAt: Date.now(),
-		meta: {
-				views:0,
-				ratings:0,
-        },
+		hashtags: hashtags
+        .split(",")
+        .map(word => word.startsWith("#") ? word : `#${word}`), //hashtags:hashtags
     }
 );
     return res.redirect("/");
-} catch{
-    return res.render("upload", {pageTitle: "Upload Video"});
+} catch(error){
+    alert(error);
+    return res.render("upload", {
+        pageTitle: "Upload Video", 
+        errorMessage: error._message,
+    });
 }
-
 };
 
 export const deleteVideo = (req, res) => { 

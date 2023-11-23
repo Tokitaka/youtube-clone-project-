@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import fetch from "node-fetch";
 
 export const getJoin = (req, res)=>{ res.render("join", {pageTitle: "Create Account"})};
 export const postJoin = async (req, res)=>{
@@ -46,6 +47,62 @@ export const postLogin = async (req, res)=>{
     req.session.user = user;
     return res.redirect("/");
 
+};
+export const startGithubLogin = (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/authorize";
+    const config = {
+        client_id : process.env.GH_CLIENT_ID,
+        scope : "read:user user:email",
+    };
+    const params = new URLSearchParams(config).toString();
+    const githubUrl = `${baseUrl}?${params}`;
+    return res.redirect(githubUrl);
+};
+export const finishGithubLogin = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/access_token"
+    const config = {
+        client_id : process.env.GH_CLIENT_ID,
+        client_secret : process.env.GH_SECRET,
+        code: req.query.code,
+    };
+    const params = new URLSearchParams(config).toString();
+    const githubUrl = `${baseUrl}?${params}`;
+
+    const tokenRequest = await (
+        await fetch(githubUrl, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+        },
+    })).json();
+
+    if("access_token" in tokenRequest){
+        const {access_token} = tokenRequest;
+        const apiUrl ="https://api.github.com";
+        const userData = await (
+            await fetch(`${apiUrl}/user`, {
+            method: "GET",
+            headers:{
+                Authorization: `token ${access_token}`,
+            },
+        })).json();
+        const emailData = await (
+            await fetch(`${apiUrl}/user/emails`, {
+            method: "GET",
+            headers:{
+                Authorization: `token ${access_token}`,
+            },
+        })).json();
+        const email = emailData.find(
+            (email) => email.primary === true && email.verified === true);
+        if(!email){
+            return res.redirect("/login");
+        }
+        return res.send(JSON.stringify(emailData));
+    } else {
+        return res.redirect("/login");
+    };
+    
 };
 export const edit = (req, res)=>{ res.send("Editing user")};
 export const remove = (req, res)=>{ res.send("Removing user")};

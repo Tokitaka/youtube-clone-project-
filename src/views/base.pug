@@ -14,10 +14,16 @@ html(lang="ko")
                         a(href="/") Home
                     li
                         a(href="/search") Search
-                    li
-                        a(href="/join") Join    
-                    li
-                        a(href="/login") Login   
+                    if loggedIn
+                        li
+                            a(href="/logout") Log Out 
+                    else 
+                        li
+                            a(href="/join") Join    
+                        li
+                            a(href="/login") Login
         main
+            if user
+                span hello! #{user.username}
             block content
     include partials/footer

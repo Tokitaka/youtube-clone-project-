@@ -40,7 +40,7 @@ export const postLogin = async (req, res)=>{
     if(!user) {
         return  res.status(400).render("login", {pageTitle: "Login", errorMessage: "An account with this username does not exist"})
     }
-    const ok = bcrypt.compare(password, user.password);
+    const ok = await bcrypt.compare(password, user.password);
     if(!ok) {
         return  res.status(400).render("login", {pageTitle: "Login", errorMessage: "Password incorrect"})
     }
@@ -178,9 +178,46 @@ export const postEditProfile = async (req, res) => {
     }
     return res.redirect("/users/edit");
 };
-export const getChangePassword = (req, res) => {
+export const getChangePassword = (req, res) => {    
+    // 화면, 백 둘다 막아야 함 
+    if (req.session.user.socialOnly) {
+        return res.redirect('/');
+    }
     return res.render("user/change-password", {pageTitle: "Change Password"});
  };
- export const postChangePassword = (req, res) => {
-    return res.redirect('/');
+ export const postChangePassword = async (req, res) => {
+    const { 
+        body:{ oldPassword, newPassword, newPassword2 },
+        session:{ user: { password: sessionPassword, _id } },
+    } = req;
+    //진짜 유저인지 항상 확인 
+    const user = await User.findById(_id);
+    const isCurrentPwOk = await bcrypt.compare(oldPassword, user.password);
+    if(!isCurrentPwOk) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password", 
+            errorMessage: "Current password is incorrect",
+        });
+    }
+    if(newPassword === oldPassword) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password", 
+            errorMessage: "Password should be different from what is was",
+        });
+    }
+    if (newPassword !== newPassword2) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password",
+            errorMessage: "Password confirmation does not match",
+        });
+    }
+    try {
+        const finalPW = await bcrypt.hash(newPassword, 5);
+        // save 발동 안됨
+        await User.findByIdAndUpdate(_id, {password : finalPW});
+        return res.redirect('/users/logout');
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Try it again in few minutes");
+    }
  };

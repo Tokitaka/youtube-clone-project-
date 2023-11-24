@@ -10,7 +10,6 @@ export const protectorMiddleware = (req, res, next) => {
     }
     next();
 };
-// session은 프로젝트 전역에서 접근 가능 
 // logged-in cannot access to 'login' 'join'
 export const publicOnlyMiddleware = (req, res, next) => {
     if(req.session.loggedIn) {

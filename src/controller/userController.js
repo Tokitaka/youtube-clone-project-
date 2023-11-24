@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import e from "express";
 import fetch from "node-fetch";
 
 export const getJoin = (req, res)=>{ res.render("join", {pageTitle: "Create Account"})};
@@ -126,6 +127,54 @@ export const logout = (req, res)=>{
 
 export const getEditProfile = (req, res) => { return res.render("editProfile", {pageTitle: "Edit Profile"});
 };
-export const postEditProfile = (req, res) => { 
-    const {username, name, location} = req.body;
-    return res.send("Editing user")};
+export const postEditProfile = async (req, res) => { 
+    const {
+            session: { user : { _id, 
+                username: sessionUsername, 
+                name: sessionName, 
+                location: sessionLocation},}, 
+            body: {username, name, location},
+        } = req;
+    let updateContents = [];
+    if (sessionUsername !== username) {
+        updateContents.push({username});
+    }
+    if (sessionName !== name) {
+        updateContents.push({name});
+    }
+    if (sessionLocation !== location) {
+        updateContents.push({location});
+    }
+
+    if (updateContents.length > 0){
+        const usernameCheck = updateContents.map(obj => obj.username)[0];
+        const nameCheck = updateContents.map(obj => obj.name)[0];
+        if (usernameCheck) {
+        const existsUsername = await User.findOne({ username: usernameCheck });
+      
+        if(existsUsername) {
+            console.log("중복된 값1");
+            return res.status(400).send("Already username has been taken");
+        }
+    }
+        if(nameCheck) {
+        const existsName = User.findOne({ name: nameCheck });
+        
+        if(existsName) {
+            console.log("중복된 값2");
+            return res.status(400).send("Already name has been taken");
+        }
+    }
+    } else { 
+        return res.send("There's no update");
+    }
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+        username, name, location
+    }, 
+    { new:true }
+    );
+    if (updatedUser) {
+        req.session.user = updatedUser;
+    }
+    return res.redirect("/users/edit");
+};

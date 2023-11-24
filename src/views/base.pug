@@ -16,14 +16,12 @@ html(lang="ko")
                         a(href="/search") Search
                     if loggedIn
                         li
-                            a(href="/logout") Log Out 
+                            a(href="/users/logout") Log Out 
                     else 
                         li
                             a(href="/join") Join    
                         li
                             a(href="/login") Login
         main
-            if user
-                span hello! #{user.username}
             block content
     include partials/footer

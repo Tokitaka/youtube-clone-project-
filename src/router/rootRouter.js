@@ -10,4 +10,5 @@ rootRouter.route('/login').get(getLogin).post(postLogin);
 //search -> globalRouter , /viedos/search (X)
 rootRouter.get('/search',search);
 
+
 export default rootRouter;

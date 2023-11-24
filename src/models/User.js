@@ -8,10 +8,11 @@ const userSchema = new mongoose.Schema({
     password:{type:String},
     name:{type:String, required: true},
     location:String,
+    avatarUrl: String, 
 });
 
 userSchema.pre("save", async function(){
-	this.password = await bcrypt.hash(this.password, 5);
+	this.password = bcrypt.hash(this.password, 5);
 });
 const User = mongoose.model("user", userSchema);
 export default User;

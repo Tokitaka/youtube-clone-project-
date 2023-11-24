@@ -107,6 +107,7 @@ export const finishGithubLogin = async (req, res) => {
                 password:"",
                 socialOnly: true,
                 location:userData.location,
+                avatarUrl: userData.avartar_url,
         });
         } 
             req.session.loggedIn = true;
@@ -120,4 +121,7 @@ export const finishGithubLogin = async (req, res) => {
 export const edit = (req, res)=>{ res.send("Editing user")};
 export const remove = (req, res)=>{ res.send("Removing user")};
 export const see = (req, res)=>{ res.send("Seeing user")};
-export const logout = (req, res)=>{ res.send("Log out user")};
+export const logout = (req, res)=>{ 
+    req.session.destroy();
+    return res.redirect("/");
+};

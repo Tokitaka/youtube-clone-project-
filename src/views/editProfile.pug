@@ -1,0 +1,9 @@
+extends base
+
+block content 
+    h2 My Profile
+    form(method="POST")
+        input(name="username", required, placeholder="Username", value=loggedInUser.username)
+        input(name="name", required, placeholder="Name", value=loggedInUser.name)
+        input(name="location", placeholder="Location", value=loggedInUser.location)
+        input(value="Save", type="submit") 

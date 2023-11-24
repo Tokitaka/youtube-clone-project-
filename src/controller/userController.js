@@ -125,7 +125,7 @@ export const logout = (req, res)=>{
     return res.redirect("/");
 };
 
-export const getEditProfile = (req, res) => { return res.render("editProfile", {pageTitle: "Edit Profile"});
+export const getEditProfile = (req, res) => { return res.render("user/edit-profile", {pageTitle: "Edit Profile"});
 };
 export const postEditProfile = async (req, res) => { 
     const {
@@ -178,3 +178,9 @@ export const postEditProfile = async (req, res) => {
     }
     return res.redirect("/users/edit");
 };
+export const getChangePassword = (req, res) => {
+    return res.render("user/change-password", {pageTitle: "Change Password"});
+ };
+ export const postChangePassword = (req, res) => {
+    return res.redirect('/');
+ };

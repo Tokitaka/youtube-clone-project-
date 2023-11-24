@@ -1,4 +1,4 @@
-extends base
+extends ../base
 
 block content 
     h2 My Profile
@@ -7,3 +7,6 @@ block content
         input(name="name", required, placeholder="Name", value=loggedInUser.name)
         input(name="location", placeholder="Location", value=loggedInUser.location)
         input(value="Save", type="submit") 
+        if !loggedInUser.socialOnly
+            hr
+            a(href="/users/change-password") Change Password &rarr;

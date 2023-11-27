@@ -2,6 +2,7 @@ extends ../base
 
 block content 
     h2 My Profile
+    img(src="/"+ loggedInUser.avatarUrl, width=100, height=100) 
     form(method="POST", enctype="multipart/form-data")
         label(for="avatar") Avatar
         input(name="avatar", type="file", id="avatar", accept="image/*") 

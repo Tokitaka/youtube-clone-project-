@@ -127,50 +127,51 @@ export const logout = (req, res)=>{
 
 export const getEditProfile = (req, res) => { return res.render("user/edit-profile", {pageTitle: "Edit Profile"});
 };
-export const postEditProfile = async (req, res) => { 
-    console.log(req.file);
+export const postEditProfile = async (req, res) => {
+    // console.log(req.file);
     const {
-            session: { user : { _id, 
+            session: { user : { _id, avatarUrl, 
                 username: sessionUsername, 
                 name: sessionName, 
                 location: sessionLocation},}, 
             body: {username, name, location},
+            file,
         } = req;
-    let updateContents = [];
-    if (sessionUsername !== username) {
-        updateContents.push({username});
-    }
-    if (sessionName !== name) {
-        updateContents.push({name});
-    }
-    if (sessionLocation !== location) {
-        updateContents.push({location});
-    }
-
-    if (updateContents.length > 0){
-        const usernameCheck = updateContents.map(obj => obj.username)[0];
-        const nameCheck = updateContents.map(obj => obj.name)[0];
-        if (usernameCheck) {
-        const existsUsername = await User.findOne({ username: usernameCheck });
+    // let updateContents = [];
+    // if (sessionUsername !== username) {
+    //     updateContents.push({username});
+    // }
+    // if (sessionName !== name) {
+    //     updateContents.push({name});
+    // }
+    // if (sessionLocation !== location) {
+    //     updateContents.push({location});
+    // }
+    
+    // if (updateContents.length > 0){
+    //     const usernameCheck = updateContents.map(obj => obj.username)[0];
+    //     const nameCheck = updateContents.map(obj => obj.name)[0];
+    //     if (usernameCheck) {
+    //     const existsUsername = await User.findOne({ username: usernameCheck });
       
-        if(existsUsername) {
-            console.log("중복된 값1");
-            return res.status(400).send("Already username has been taken");
-        }
-    }
-        if(nameCheck) {
-        const existsName = User.findOne({ name: nameCheck });
+    //     if(existsUsername) {
+    //         console.log("중복된 값1");
+    //         return res.status(400).send("Already username has been taken");
+    //     }
+    // }
+    //     if(nameCheck) {
+    //     const existsName = User.findOne({ name: nameCheck });
         
-        if(existsName) {
-            console.log("중복된 값2");
-            return res.status(400).send("Already name has been taken");
-        }
-    }
-    } else { 
-        return res.send("There's no update");
-    }
+    //     if(existsName) {
+    //         console.log("중복된 값2");
+    //         return res.status(400).send("Already name has been taken");
+    //     }
+    // }
+    // } else { 
+    //     return res.redirect("/users/edit");
+    // }
     const updatedUser = await User.findByIdAndUpdate(_id, {
-        username, name, location
+        username, name, location, avatarUrl: file ?  file.path : avatarUrl,
     }, 
     { new:true }
     );

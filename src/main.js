@@ -29,10 +29,11 @@ app.use(session({
     }));
 
 app.use(localsMiddleware);
+app.use('/uploads', express.static("uploads"));
 // domain 별 router 지정
-app.use('/',rootRouter)
-app.use('/videos',videoRouter)
-app.use('/users',userRouter)
+app.use('/',rootRouter);
+app.use('/videos',videoRouter);
+app.use('/users',userRouter);
 
 
 export default app;

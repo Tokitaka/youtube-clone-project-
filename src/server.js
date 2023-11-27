@@ -30,6 +30,7 @@ app.use(session({
 
 app.use(localsMiddleware);
 app.use('/uploads', express.static("uploads"));
+app.use('/static', express.static("assets"));
 // domain 별 router 지정
 app.use('/',rootRouter);
 app.use('/videos',videoRouter);

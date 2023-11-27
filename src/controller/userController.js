@@ -1,6 +1,5 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import e from "express";
 import fetch from "node-fetch";
 
 export const getJoin = (req, res)=>{ res.render("join", {pageTitle: "Create Account"})};
@@ -125,7 +124,7 @@ export const logout = (req, res)=>{
     return res.redirect("/");
 };
 
-export const getEditProfile = (req, res) => { return res.render("user/edit-profile", {pageTitle: "Edit Profile"});
+export const getEditProfile = (req, res) => { return res.render("users/edit-profile", {pageTitle: "Edit Profile"});
 };
 export const postEditProfile = async (req, res) => {
     // console.log(req.file);
@@ -185,7 +184,7 @@ export const getChangePassword = (req, res) => {
     if (req.session.user.socialOnly) {
         return res.redirect('/');
     }
-    return res.render("user/change-password", {pageTitle: "Change Password"});
+    return res.render("users/change-password", {pageTitle: "Change Password"});
  };
  export const postChangePassword = async (req, res) => {
     const { 
@@ -196,19 +195,19 @@ export const getChangePassword = (req, res) => {
     const user = await User.findById(_id);
     const isCurrentPwOk = await bcrypt.compare(oldPassword, user.password);
     if(!isCurrentPwOk) {
-        return res.status(400).render("user/change-password", {
+        return res.status(400).render("users/change-password", {
             pageTitle: "Change Password", 
             errorMessage: "Current password is incorrect",
         });
     }
     if(newPassword === oldPassword) {
-        return res.status(400).render("user/change-password", {
+        return res.status(400).render("users/change-password", {
             pageTitle: "Change Password", 
             errorMessage: "Password should be different from what is was",
         });
     }
     if (newPassword !== newPassword2) {
-        return res.status(400).render("user/change-password", {
+        return res.status(400).render("users/change-password", {
             pageTitle: "Change Password",
             errorMessage: "Password confirmation does not match",
         });
@@ -222,4 +221,13 @@ export const getChangePassword = (req, res) => {
         console.log(error);
         return res.status(500).send("Try it again in few minutes");
     }
+ };
+// 모두가 접근 가능한 youtube profile 페이지 만들기 
+ export const userProfile = async (req, res) => {
+    const {id} = req.params;
+    const user = await User.findById(id);
+    if(!user){
+        return res.status(404).render("404");
+    }
+    return res.render("users/profile", {pageTitle: user.username, user});
  };

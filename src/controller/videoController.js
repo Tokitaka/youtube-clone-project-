@@ -1,12 +1,12 @@
-import Video from '../models/Video';
+import Video from "../models/Video";
 
 export const watch = async (req, res)=>{ 
     const {id} = req.params;
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("owner");
     if (!video) {
         return res.status(404).render("404",{pageTitle: "Video Not Found"});
     }
-    return res.render("video/watch", {pageTitle: `${video.title}`, video}); 
+    return res.render("videos/watch", {pageTitle: `${video.title}`, video}); 
 };
 
 export const getEdit = async (req, res)=>{ 
@@ -55,10 +55,10 @@ export const search = async (req, res) => {
 };
 
 export const getUpload = (req, res) => { 
-    return res.render("video/upload")};
+    return res.render("videos/upload")};
 
 export const postUpload = async (req, res) => { 
-    const {body: { title, description, hashtags }, file: {path: fileUrl}} 
+    const {body: { title, description, hashtags }, file: {path: fileUrl}, session:{user:_id}} 
     = req;
     try{
     await Video.create({
@@ -66,11 +66,12 @@ export const postUpload = async (req, res) => {
 		title,
 		description, 
 		hashtags: Video.formatHashtags(hashtags), 
+        owner:_id,
     }
 );
     return res.redirect("/");
 } catch(error){
-    return res.status(400).render("upload", {
+    return res.status(400).render("videos/upload", {
         pageTitle: "Upload Video", 
         errorMessage: error._message,
     });

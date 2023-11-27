@@ -213,11 +213,10 @@ export const getChangePassword = (req, res) => {
             errorMessage: "Password confirmation does not match",
         });
     }
-    try {
-        const finalPW = await bcrypt.hash(newPassword, 5);
-        // save 발동 안됨
-        await User.findByIdAndUpdate(_id, {password : finalPW});
-        return res.redirect('/users/logout');
+    try{
+    user.password = newPassword;
+    user.save();
+    return res.redirect('/users/logout');
     } catch (error) {
         console.log(error);
         return res.status(500).send("Try it again in few minutes");

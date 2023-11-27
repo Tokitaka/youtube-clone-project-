@@ -2,11 +2,13 @@ extends ../base
 
 block content 
     h2 My Profile
-    form(method="POST")
+    form(method="POST", enctype="multipart/form-data")
+        label(for="avatar") Avatar
+        input(name="avatar", type="file", id="avatar", accept="image/*") 
         input(name="username", required, placeholder="Username", value=loggedInUser.username)
         input(name="name", required, placeholder="Name", value=loggedInUser.name)
         input(name="location", placeholder="Location", value=loggedInUser.location)
         input(value="Save", type="submit") 
         if !loggedInUser.socialOnly
             hr
-            a(href="/users/change-password") Change Password &rarr;
+            a(href="/users/change-password") Change Password &rarr; 

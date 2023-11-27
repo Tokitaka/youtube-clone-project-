@@ -128,6 +128,7 @@ export const logout = (req, res)=>{
 export const getEditProfile = (req, res) => { return res.render("user/edit-profile", {pageTitle: "Edit Profile"});
 };
 export const postEditProfile = async (req, res) => { 
+    console.log(req.file);
     const {
             session: { user : { _id, 
                 username: sessionUsername, 

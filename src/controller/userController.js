@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
@@ -222,10 +223,10 @@ export const getChangePassword = (req, res) => {
         return res.status(500).send("Try it again in few minutes");
     }
  };
-// 모두가 접근 가능한 youtube profile 페이지 만들기 
+// Public youtube profile Page 
  export const userProfile = async (req, res) => {
     const {id} = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("videos");
     if(!user){
         return res.status(404).render("404");
     }

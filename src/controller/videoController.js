@@ -1,4 +1,5 @@
 import Video from "../models/Video";
+import User from "../models/User";
 
 export const watch = async (req, res)=>{ 
     const {id} = req.params;
@@ -61,7 +62,7 @@ export const postUpload = async (req, res) => {
     const {body: { title, description, hashtags }, file: {path: fileUrl}, session:{user:_id}} 
     = req;
     try{
-    await Video.create({
+   const newVideo = await Video.create({
         fileUrl,
 		title,
 		description, 
@@ -69,8 +70,12 @@ export const postUpload = async (req, res) => {
         owner:_id,
     }
 );
+    const user = await User.findById(_id);
+    user.videos.push(newVideo);
+    user.save();
     return res.redirect("/");
 } catch(error){
+    console.log(error)
     return res.status(400).render("videos/upload", {
         pageTitle: "Upload Video", 
         errorMessage: error._message,

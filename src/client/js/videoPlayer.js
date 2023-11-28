@@ -38,15 +38,18 @@ const handleVolumeChange =  (event) => {
     }
     volumeValue = value;
 };
-const handleLoadedMetadata = () => {
-    totalTime.innerText = Math.floor(video.duration); //ceil
+const formatTime = (seconds) => {
+    return new Date(seconds*1000).toISOString().substring(14,19); // return 안해도 되나? 
 };
-const handleTimeupdate = () => {
-    currentTIme.innerText =  video.currentTime;
+const handleLoadedMetadata = () => {
+    totalTime.innerText = formatTime(Math.floor(video.duration)); //ceil
+};
+const handleTimeUpdate = () => {
+    currentTIme.innerText = formatTime(Math.floor(video.currentTime))+" ";
 };
 //비디오 시간이 변결될 떄 
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange); // value 변화 감지 
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
-video.addEventListener("timeupdate", handleTimeupdate);
+video.addEventListener("timeupdate", handleTimeUpdate);

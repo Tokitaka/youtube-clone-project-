@@ -3,6 +3,7 @@ const videoPreview= document.getElementById("preview");
 
 let stream;
 let recorder;
+let videoFile;
 
 //preview 
 const init= async ()=>{
@@ -35,8 +36,15 @@ const handleStart = ()=>{
 };
 	recorder.start();
 };
+
 const handleDownload = ()=>{
+	const a = document.createElement("a");
+	a.href = videoFile;
+	a.download = "MyRecordingFileName.webm";
+	document.body.appendChild(a);
+	a.click();
 };
+
 const handleStop = ()=>{
 	startBtn.innerText = "Download Recording";
 	startBtn.removeEventListener("click", handleStop);

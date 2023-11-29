@@ -92,12 +92,20 @@ const handleMouseLeave = () => {
     ctrLeaveTimeout = setTimeout(hideControls,2000);
 };
 
+const handledEnded = async (req, res) => {
+    const {id} = videoContainer.dataset;
+    await fetch(`/api/videos/${id}/view`, {
+        method: "POST",
+    });
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange); // value 변화 감지 
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("click", handlePlayClick);
+video.addEventListener("ended", handledEnded)
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullScreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);

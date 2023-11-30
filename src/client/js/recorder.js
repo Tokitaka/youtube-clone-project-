@@ -10,7 +10,7 @@ const init= async ()=>{
 	const stream = await navigator.mediaDevices.getUserMedia(
 {
 	audio: true, 
-	video: { width: 400, height: 200 }
+	video: { width: 480, height: 250 }
 });
 	videoPreview.srcObject = stream;
 	videoPreview.play(); 	
@@ -41,6 +41,7 @@ const handleDownload = ()=>{
 	const a = document.createElement("a");
 	a.href = videoFile;
 	a.download = "MyRecordingFileName.webm";
+    a.style.display="none";
 	document.body.appendChild(a);
 	a.click();
 };

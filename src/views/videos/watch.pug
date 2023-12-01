@@ -19,5 +19,17 @@ block content
             div
                 span#fullScreen 
                     i.fas.fa-expand 
+        if loggedIn           
+        div.video__add-comments
+			form.video__comments-form#commentForm(method="POST", action="comments")
+					textarea(cols="30", rows="10", placeholder="Write a comment")
+					button Add Comment
+        div.video__comments
+		ul
+			each comment in video.comments.reverse()
+					li.video__comment=comment.text
+					li=comment.createdAt
 block scripts 
     script(src="/static/js/videoPlayer.js")
+    if loggedIn
+	script(src="/static/js/commentSection.js")

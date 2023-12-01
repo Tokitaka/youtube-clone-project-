@@ -2,7 +2,7 @@ import express from "express";
 import morgan from 'morgan';
 import session from "express-session";
 import MongoStore from "connect-mongo";
-
+import flash from "express-flash";
 
 import rootRouter from "./router/rootRouter";
 import userRouter from "./router/userRouter";
@@ -30,6 +30,7 @@ app.use(session({
         },
     }));
 
+app.use(flash());
 app.use(localsMiddleware);
 app.use((req, res, next) => {
     res.header("Cross-Origin-Embedder-Policy", "credentialless");

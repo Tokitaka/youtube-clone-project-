@@ -1,3 +1,6 @@
+import { createFFmpeg, fetchFile } from "@ffmepg/ffmpeg";
+import { async } from "regenerator-runtime";
+
 const startBtn = document.getElementById("startBtn");
 const videoPreview= document.getElementById("preview");
 
@@ -37,13 +40,24 @@ const handleStart = ()=>{
 	recorder.start();
 };
 
-const handleDownload = ()=>{
-	const a = document.createElement("a");
-	a.href = videoFile;
-	a.download = "MyRecordingFileName.webm";
-    a.style.display="none";
-	document.body.appendChild(a);
-	a.click();
+const handleDownload = async ()=>{
+    const ffmpeg = createFFmpeg({ log: true });
+    await ffmpeg.load();
+    ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
+
+    await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
+
+    const mp4File = ffmpeg.FS("readFile", "output.mp4");
+
+    const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
+
+    const mp4Url = URL.createObjectURL(mp4Blob);
+
+    const a = document.createElement("a");
+    a.href = mp4Url;
+    a.download = "MyRecording.mp4";
+    document.body.appendChild(a);
+    a.click();
 };
 
 const handleStop = ()=>{
